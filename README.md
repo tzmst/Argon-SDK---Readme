@@ -34,32 +34,6 @@ _Steps needed to initialize the sdk_
 
 ## Running the API functions
 _In your Activity/Fragment file run the following to types of AsyncRequest to access the API calls:_
-### AsyncRequest:
-_The AsyncRequest has the following constructors:_
-
-- ``` AsyncRequest(Context context, IOnFinishWithDataCallback onResponse)```
-# 
-    IOnFinishWithDataCallback onResponse 
-- this code will be runned on post execute, the following is needed to see if the request was succesfull or not:
-
-Ex:
-
-    new IOnFinishWithDataCallback() {
-         @Override 
-         public void onFinish(Object caller) {
-		      ArgonUserResponse response = ((UserResponse) caller);
-		      if (response != null && response.isOk()) {
-			       if (response.getUser() != null) {
-				   // 
-			       }  
-		      }
-         }
- }
-
-- ``` AsyncRequest(Context context, IOnFinishWithDataCallback onResponse, IOnPreExecuteCallback onPreExecute)```
-# 
-    IOnPreExecuteCallback onPreExecute
-- this code will be runned in pre execute, this can be null if no code is needed to run in onPreExecute() section of the AsyncTask request;
 
 ## Argon API Calls
 
@@ -67,93 +41,38 @@ Ex:
 
 Ex:
 
-    new AsyncRequest(context, new IOnFinishWithDataCallback() {
-         @Override 
-         public void onFinish(Object caller) {
-		      ArgonUserResponse response = ((UserResponse) caller);
-		      if (response != null && response.isOk()) { //response.isOk() - returns if the request was done succesfully or not
-                   //response.save(context) - Call this if you want to save an instance to memory of the UserResponse, You can use this UserResponse instance to get the ArgonUser fields.
-			       if (response.getUser() != null) { //response.getUser() - returns an ArgonUser Object;
-				   // Do something with the user
-			       }  
-		      } else {
-                  //Fail block
-              }
-         }
-    }).execute(argonUser);
+    ArgonSDK.registerUser(context, argonUser, new IOnPreExecuteCallback(), new IOnFinishWithUserCallback(), new IOnExceptionCallback());
 
-_argonUser - an instance of the ArgonUser Object class - in this object you can set the register parameters of the user. **argonUser apiMethod needs to be set to CallMethod.POST to access the Register function.**_
+
+_argonUser - an instance of the ArgonUser Object class - in this object you can set the register parameters of the user._
 
 
 ### 2. Login user:
 
 Ex:
 
-    new AsyncRequest(LoginActivity.this, new IOnFinishWithDataCallback() {
-	     @Override
-	     public void onFinish(Object caller) {
-		     ArgonUserResponse = ((UserResponse) caller);
-		     if (response != null && response.isOk()) {
-                //response.save(context) - Call this if you want to save an instance to memory of the UserResponse, You can use this UserResponse instance to get the ArgonUser fields.
-                ...
-             } else { //Fail block }
-        }
-    }).execute(basicUserFields);
+    ArgonSDK.loginUser(context, basicUserFields, new IOnPreExecuteCallback(), new IOnFinishWithUserCallback(), new IOnExceptionCallback());
 
 _basicUserFields - and Instance of BasicUserFields, this Object has screenname and password fields needed to login._ _Login request returns an ArgonUserResponse object._
 
 ### 3. Get user:
 Ex:
 
-    new AsyncRequest(context, new IOnFinishWithDataCallback() {
-         @Override 
-         public void onFinish(Object caller) {
-		      ArgonUserResponse response = ((UserResponse) caller);
-		      if (response != null && response.isOk()) { //response.isOk() - returns if the request was done succesfully or not
-                   //response.save(context) - Call this if you want to save an instance to memory of the UserResponse, You can use this UserResponse instance to get the ArgonUser fields.
-			       if (response.getUser() != null) { //response.getUser() - returns an ArgonUser Object;
-				   // Do something with the user
-			       }  
-		      } else {
-                  //Fail block
-              }
-         }
-    }).execute(argonUser);
+    ArgonSDK.getUser(context, argonUser, new IOnPreExecuteCallback(), new IOnFinishWithUserCallback(), new IOnExceptionCallback());
 
-_argonUser - an instance of the ArgonUser Object class - in this object you can set the register parameters of the user. **argonUser apiMethod needs to be set to CallMethod.GET to access the GetUser function. (  argonUser.setApiMethod(CallMethid.GET) )**_
+_argonUser - an instance of the ArgonUser Object class - in this object you can set the get information parameters of the user._
 
 ### 4. Update user:
 Ex:
 
-    new AsyncRequest(context, new IOnFinishWithDataCallback() {
-         @Override 
-         public void onFinish(Object caller) {
-		      ArgonUserResponse response = ((UserResponse) caller);
-		      if (response != null && response.isOk()) { //response.isOk() - returns if the request was done succesfully or not
-                   //response.save(context) - Call this if you want to save an instance to memory of the UserResponse, You can use this UserResponse instance to get the ArgonUser fields.
-			       if (response.getUser() != null) { //response.getUser() - returns an ArgonUser Object;
-				   // Do something with the user
-			       }  
-		      } else {
-                  //Fail block
-              }
-         }
-    }).execute(argonUser);
+    ArgonSDK.updateUser(context, argonUser, new IOnPreExecuteCallback(), new IOnFinishWithUserCallback(), new IOnExceptionCallback());
 
-_argonUser - an instance of the ArgonUser Object class - in this object you can set the register parameters of the user. **argonUser apiMethod needs to be set to CallMethod.PUT to access the GetUser function. (  argonUser.setApiMethod(CallMethid.PUT) )**_
+_argonUser - an instance of the ArgonUser Object class - in this object you can set the update parameters of the user._
 
 ### 5. Screen name suggestions:
 Ex:
 
-    new AsyncRequest(context, new IOnFinishWithDataCallback() {
-		@Override
-		public void onFinish(Object caller) {
-			ScreenNameSuggestion response = ((ScreenNameSuggestion) caller);
-			if (response != null && response.isOk()) {
-                 response.getAvailableScreenNames() // returns a string with a list of suggestions
-			} 
-		}
-	}).execute(new ScreenNameSuggestion(screenName));
+    ArgonSDK.getScreenNameSuggestion(context, screenName, new IOnPreExecuteCallback(), new IOnFinishWithSuggestionCallback(), new IOnExceptionCallback());
 
 _screenName - the username that the user wants to use._
 
@@ -162,15 +81,131 @@ _Checks if the user is available_
 
 Ex:
 
-	new AsyncRequest(RegisterActivity.this, new IOnFinishWithDataCallback() {
-		@Override
-		public void onFinish(Object caller) {
-			ScreenNameAvailability response = ((ScreenNameAvailability) caller);
-			if (response != null && response.isOk() && !response.isAvailable()) {
-				tryLaunchScreenNameSuggestion(screenName);
-			} 
-
-		}
-	}).execute(new ScreenNameAvailability(screenName));
+    ArgonSDK.getScreenNameAvailability(context, screenName, new IOnPreExecuteCallback(), new IOnFinishWithAvailabilityCallback(), new IOnExceptionCallback());
 
 _screenName - the username that the user wants to use._
+
+
+## Argon API Calls - v2
+
+### 7. List topics:
+_List topics from server_
+
+Ex:
+
+    ArgonSDK.listTopics(context, offset, limit,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_offset - number of entries to skip._
+
+_limit - number of topics in request (min 0, max 100, default:10)_
+
+### 8. List single topic:
+_List single topic from server_
+
+Ex:
+
+    ArgonSDK.listSingleTopic(context, topic,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topic - instance of Topic Object containing the information to list_
+
+### 9. Create topic:
+_Create topic_
+
+Ex:
+
+    ArgonSDK.createTopic(context, topic,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topic - instance of Topic Object containing the information to create the topic_
+
+### 10. Update topic:
+_Update topic_
+
+Ex:
+
+    ArgonSDK.updateTopic(context, topic,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topic - instance of Topic Object containing the information to update the topic_
+
+### 11. Topic Url Lookup:
+_Lookup for a topic_
+
+Ex:
+
+    ArgonSDK.topicUrlLookup(context, topic,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topic - instance of Topic Object containing the information to lookup for the topic_
+
+### 12. Delete topic:
+_Delete a specific topic_
+
+Ex:
+
+    ArgonSDK.deleteTopic(context, topicId,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topicId - the topic id that you want to delete._
+
+### 13. Undelete topic:
+_Undelete a specific topic_
+
+Ex:
+
+    ArgonSDK.undeleteTopic(context, topic,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_topic - instance of Topic Object containing the information to undelete the specific topic_
+
+### 14. List comments:
+_List topics from server_
+
+Ex:
+
+    ArgonSDK.listComments(context, comment,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_comment - instance of Comment object, lists the comments specified in the comment topic id togheter with the limit and offset provided_
+
+### 15. List single topic:
+_List single comment from server_
+
+Ex:
+
+    ArgonSDK.listSingleComment(context, comment,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_comment - instance of Comment object, lists the comment specified in the comment topic id togheter with the comment id_
+
+### 16. Create comment:
+_Create comment_
+
+Ex:
+
+    ArgonSDK.createComment(context, comment,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_comment - instance of Comment Object containing the information to create the comment for the specified topic id_
+
+### 17. Delete comment:
+_Delete a specific comment_
+
+Ex:
+
+    ArgonSDK.deleteComment(context, comment,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+### 18. Undelete comment:
+_Undelete a specific comment_
+
+Ex:
+
+    ArgonSDK.undeleteComment(context, comment,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+### 19. List ScorePoints:
+_Lists scoredPoints for a specific user_
+
+Ex:
+
+    ArgonSDK.listScorePoints(context, limit, offset,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+### 20. List ScorePoints:
+_Lists scoredPoints for a specific user_
+
+Ex:
+
+    ArgonSDK.unkownCall(context, unkownObject,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
+
+_- unkownObject - an instance of UnkownObject, here you provide the type of call by setting the apiMethod, json information by setting callObject. Togheter with this you have to provide an url for the callUp and the userToken if needed in the request._
