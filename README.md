@@ -201,11 +201,37 @@ Ex:
 
     ArgonSDK.listScorePoints(context, limit, offset,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
 
-### 20. List ScorePoints:
-_Lists scoredPoints for a specific user_
+### 20. Unkown call:
+_Make an unkown call to the server. The call is not documented in the standard api_
 
 Ex:
 
     ArgonSDK.unkownCall(context, unkownObject,  new IOnPreExecuteCallback(), new IOnFinishWithTopicCallback(), new IOnExceptionCallback());
 
 _- unkownObject - an instance of UnkownObject, here you provide the type of call by setting the apiMethod, json information by setting callObject. Togheter with this you have to provide an url for the callUp and the userToken if needed in the request._
+
+### 21. Reset password:
+_Reset user password. This sends a sms message to the user on the phone number he registered with. To reset password you can use the **screenName** or the **phone number**_
+
+Ex:
+
+    ArgonSDK.resetPassword(context, screenName,  new IOnPreExecuteCallback(), new IOnFinishWithResetCallback(), new IOnExceptionCallback());
+
+    ArgonSDK.resetPassword(context, phoneNumber,  new IOnPreExecuteCallback(), new IOnFinishWithResetCallback(), new IOnExceptionCallback());
+
+_- screenName - user screen name._
+
+_- phoneNumber - user phone number._
+
+### 22. Reset password with token:
+_Resets the password on the server with the received token_
+
+Ex:
+
+    ArgonSDK.resetPasswordWithToken(context, token, password, passwordConfirmation,  new IOnPreExecuteCallback(), new IOnFinishWithResetWithTokenCallback(), new IOnExceptionCallback());
+
+_- screenName - user screen name._
+
+_- phoneNumber - user phone number._
+
+_**The caller callback for the IOnFinishWithResetWithTokenCallback (caller.response) returns an argonUser object**_
